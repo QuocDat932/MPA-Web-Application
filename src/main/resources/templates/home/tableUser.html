@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table All User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+        table, th, td {
+           border:1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello MPA System Web</h1>
+    <div>
+        <div id="menu"></div>
+    </div>
+
+    <div>
+        <div id="tableUser">
+
+        </div>
+    </div>
+</body>
+	<script type="text/javascript">
+		var menu = [{href:"/form/table/user", name:"Table"}, {href:"/form/main", name:"Main Board"}];
+		
+		function detailUser(userId) { 
+            window.open(`/form/table/userDetail?UserId=${userId}`);
+        };
+        
+		$(document).ready(function(){
+			console.log("Hello AnHDev");  
+            let resultMenu = '';
+            for(let i = 0; i< menu.length; i++){
+                resultMenu += `<a href=${menu[i].href}>${menu[i].name}</a> </br>`
+            };
+            $("#menu").append(resultMenu);
+
+            $.ajax({
+                url: '/api/user/getAllUser',
+                type: "GET",
+                contentType:'application/json',
+                async: 'false'
+            }).done(function(data){
+                console.log(data);
+
+                let tableUser = '<table style="width:100%">'+
+                                '<tr>'+
+                                    '<th>Ma Khach Hang</th>'+
+                                    '<th>Ten Khach Hang</th>'+
+                                    '<th>Email</th>'+
+                                    '<th>Phone</th>'+
+                                    '<th>Ma Vai Tro</th>'+
+                                    '<th>Ten Vai Tro</th>'+
+                                    '<th>Dia Chi</th>'+
+                                    '<th>Ngay Thang Nam Sinh</th>'+
+                                '</tr>';
+
+                for(let i = 0; i < data.length; i++){
+                   tableUser += `<tr>`+
+                    `<th onclick="detailUser(${data[i].maKh})" style="cursor: pointer">${data[i].maKh}</th>`+
+                    `<th>${data[i].tenKh}</th>`+
+                    `<th>${data[i].mail}</th>`+
+                    `<th>${data[i].phone}</th>`+
+                    `<th>${data[i].roleId}</th>`+
+                    `<th>${data[i].roleName}</th>`+
+                    `<th>${data[i].diaChi}</th>`+
+                    `<th>${data[i].birthday}</th>`+
+                    `</tr>`
+                };
+                tableUser += '</table>';
+                console.log(tableUser);
+                $("#tableUser").append(tableUser);
+            }).fail(function (error){
+                console.log(error);
+            })
+
+        });
+	</script>
+</html> 

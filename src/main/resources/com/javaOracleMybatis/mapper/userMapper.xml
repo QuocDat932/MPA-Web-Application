@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaOracleMybatis.Mappers.userMapper">
+	<resultMap id="resultMapUser" type="com.javaOracleMybatis.Models.user">
+		<result column="MAKH" property="maKh"/>
+		<result column="TENKH" property="tenKh"/>
+		<result column="DIACHI" property="diaChi"/>
+		<result column="MAIL" property="mail"/>
+		<result column="PHONE" property="phone"/>
+		<result column="IMAGE" property="img"/>
+		<result column="BIRTHDAY" property="birthday"/>
+		<result column="ISUSE" property="isUse"/>
+		<result column="ROLEID" property="roleId"/>
+		<result column="ROLEID" property="roleId"/>
+	</resultMap>
+	<select id="getAllUser" resultMap="resultMapUser">
+		SELECT usr.MAKH,
+		       usr.TENKH,
+		       usr.DIACHI,
+		       usr.MAIL,
+		       usr.PHONE,
+		       usr.IMAGE,
+		       TO_CHAR(usr.BIRTHDAY,'DD/MM/YYYY') BIRTHDAY,
+		       usr.ISUSE,
+		       usr.ROLEID,
+		       ROLENAME
+		FROM SYSTEM.INV_HR_USER usr LEFT JOIN SYSTEM.inv_hr_role role 
+											ON role.roleid = usr.roleid
+		WHERE 1 = 1
+		ORDER BY usr.MAKH ASC
+	</select>
+	
+	<update id="userUpdate" parameterType="com.javaOracleMybatis.Models.user">
+		UPDATE SYSTEM.INV_HR_USER
+		   SET TENKH = #{tenKh},
+		   	   DIACHI = #{diaChi},
+		   	   MAIL	  = #{mail}
+		WHERE MAKH = #{maKh}
+	</update>
+
+	
+	<select id="getUserById" resultMap="resultMapUser" >
+		SELECT usr.MAKH,
+		       usr.TENKH,
+		       usr.DIACHI,
+		       usr.MAIL,
+		       usr.PHONE,
+		       usr.IMAGE,
+		       TO_CHAR(usr.BIRTHDAY,'DD/MM/YYYY') BIRTHDAY,
+		       usr.ISUSE,
+		       usr.ROLEID,
+		       ROLENAME
+		FROM SYSTEM.INV_HR_USER usr LEFT JOIN SYSTEM.inv_hr_role role 
+											ON role.roleid = usr.roleid
+		WHERE 1 = 1
+		  AND usr.MAKH = #{Id}
+		ORDER BY usr.MAKH ASC
+	</select>
+	
+	<select id="getUserByRoleIdAndIsUse" resultMap="resultMapUser" >
+		SELECT usr.MAKH,
+		       usr.TENKH,
+		       usr.DIACHI,
+		       usr.MAIL,
+		       usr.PHONE,
+		       usr.IMAGE,
+		       TO_CHAR(usr.BIRTHDAY,'DD/MM/YYYY') BIRTHDAY,
+		       usr.ISUSE,
+		       usr.ROLEID,
+		       ROLENAME
+		FROM SYSTEM.INV_HR_USER usr LEFT JOIN SYSTEM.inv_hr_role role 
+											ON role.roleid = usr.roleid
+		WHERE 1 = 1
+		  <if test="roleId != null and roleId != '' ">
+		  	AND usr.ROLEID = #{roleId}
+		  </if>
+		  <if test="isUse != null and isUse != '' ">
+		  	AND usr.ISUSE = #{isUse}
+		  </if>
+		  
+		ORDER BY usr.MAKH ASC
+	</select>
+
+	<insert id="userInsert">
+		INSERT INTO 
+				SYSTEM.INV_HR_USER (    MAKH
+									  , TENKH
+									  , DIACHI
+									  , MAIL
+									  , PHONE
+									  , ROLEID
+								  )
+		VALUES(
+									  #{maKh}
+									, #{tenKh}
+									, #{diaChi}
+									, #{mail}
+									, #{phone}
+									, 3
+		)
+		
+	</insert>
+
+	<select id="getNewIdUser" resultType="Integer">
+		SELECT MAX(maKh) + 1
+		FROM SYSTEM.INV_HR_USER
+	</select>
+	
+	<delete id="userDeleted">
+		DELETE FROM SYSTEM.INV_HR_USER
+		WHERE MAKH = #{maKh}
+	</delete>
+</mapper>

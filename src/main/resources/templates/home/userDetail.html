@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Hello MPA System Web</h1>
+    <div>
+        <div id="menu"></div>
+    </div>
+    <div>
+        <div id="datailForm"></div>
+    </div>
+</body>
+	<script type="text/javascript">
+		var menu = [{href:"/form/table/user", name:"Table"}, {href:"/form/main", name:"Main Board"}]
+		$(document).ready(function(){
+            let resultMenu = '';
+			for(let i = 0; i< menu.length; i++){
+                resultMenu += `<a href=${menu[i].href}>${menu[i].name}</a> </br>`
+            };
+            $("#menu").append(resultMenu);
+            
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('UserId');
+            if(userId){
+                $.ajax({
+                url: '/api/user/getUserById?userId='+userId,
+                type: "GET",
+                contentType:'application/json',
+                async: 'false'
+            }).done(function(data){
+                console.log(data);
+                let detailForm =
+                                `<form>`+
+                                    `<label >Ma Khach Hang:</label><br>`+
+                                    `<input type="text" value="${data.maKh}"><br>`+
+                                    `<label >Ten Khach Hang:</label><br>`+
+                                    `<input type="text" value="${data.tenKh}"><br>`+
+                                    `<label >Email:</label><br>`+
+                                    `<input type="text" value="${data.mail}"><br>`+
+                                    `<label >Phone:</label><br>`+
+                                    `<input type="text" value="${data.phone}"><br>`+
+                                    `<label >Ma Vai Tro:</label><br>`+
+                                    `<input type="text" value="${data.roleId}"><br>`+
+                                    `<label >Ten Vai Tro:</label><br>`+
+                                    `<input type="text" value="${data.roleName}"><br>`+
+                                    `<label >Dia Chi:</label><br>`+
+                                    `<input type="text" value="${data.diaChi}"><br>`+
+                                    `<label >Ngay Thang Nam Sinh:</label><br>`+
+                                    `<input type="text" value="${data.birthday}"><br>`+
+                                `</form>`;
+                $("#datailForm").append(detailForm);                
+            }).fail(function (error){
+                console.log(error);
+            }) 
+            }
+
+        });
+	</script>
+</html> 
