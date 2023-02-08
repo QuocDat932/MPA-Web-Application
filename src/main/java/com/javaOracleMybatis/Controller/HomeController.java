@@ -24,4 +24,6 @@ public class HomeController {
 	public String viewTableUserDetail(@RequestParam("UserId") int userId) {
 		return "home/userDetail";
 	}
+	
+	// branch 04
 }
